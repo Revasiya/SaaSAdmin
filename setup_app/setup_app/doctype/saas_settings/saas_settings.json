@@ -7,19 +7,26 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "stock_site_count"
+  "stock_site_count",
+  "db_password"
  ],
  "fields": [
   {
    "fieldname": "stock_site_count",
    "fieldtype": "Data",
    "label": "stock site count"
+  },
+  {
+   "default": "12345678",
+   "fieldname": "db_password",
+   "fieldtype": "Data",
+   "label": "DB password"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-05-09 15:59:58.720415",
+ "modified": "2023-05-09 21:44:39.039437",
  "modified_by": "Administrator",
  "module": "Setup App",
  "name": "SaaS settings",
