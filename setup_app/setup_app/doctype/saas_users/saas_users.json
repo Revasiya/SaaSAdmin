@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-05-09 09:14:20.207644",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "first_name",
+  "last_name",
+  "email",
+  "domain"
+ ],
+ "fields": [
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "first name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "last name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "domain",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "domain",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-05-09 09:14:20.207644",
+ "modified_by": "Administrator",
+ "module": "Setup App",
+ "name": "SaaS users",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

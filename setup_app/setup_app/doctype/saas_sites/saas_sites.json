@@ -1,0 +1,83 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-05-09 09:08:03.596019",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "domain",
+  "first_name",
+  "last_name",
+  "company_name",
+  "email",
+  "password"
+ ],
+ "fields": [
+  {
+   "fieldname": "domain",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "domain",
+   "reqd": 1
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "first name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Text",
+   "label": "last name"
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "company name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Password",
+   "label": "password",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-05-09 09:08:03.596019",
+ "modified_by": "Administrator",
+ "module": "Setup App",
+ "name": "SaaS sites",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
