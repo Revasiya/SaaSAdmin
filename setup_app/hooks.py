@@ -113,23 +113,12 @@ app_license = "MIT"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-#	"all": [
-#		"setup_app.tasks.all"
-#	],
-#	"daily": [
-#		"setup_app.tasks.daily"
-#	],
-#	"hourly": [
-#		"setup_app.tasks.hourly"
-#	],
-#	"weekly": [
-#		"setup_app.tasks.weekly"
-#	],
-#	"monthly": [
-#		"setup_app.tasks.monthly"
-#	],
-# }
+scheduler_events = {
+	
+	"daily": [
+		"setup_app.setup_app.docktype.saas_stock_sites.saas_stock_sites.refreshStockSites"
+    ]
+}
 
 # Testing
 # -------
