@@ -8,7 +8,9 @@
  "engine": "InnoDB",
  "field_order": [
   "stock_site_count",
-  "db_password"
+  "db_password",
+  "root_password",
+  "domain"
  ],
  "fields": [
   {
@@ -21,12 +23,22 @@
    "fieldname": "db_password",
    "fieldtype": "Data",
    "label": "DB password"
+  },
+  {
+   "fieldname": "root_password",
+   "fieldtype": "Data",
+   "label": "root password"
+  },
+  {
+   "fieldname": "domain",
+   "fieldtype": "Data",
+   "label": "domain"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-05-09 21:44:39.039437",
+ "modified": "2023-05-12 14:25:44.427185",
  "modified_by": "Administrator",
  "module": "Setup App",
  "name": "SaaS settings",

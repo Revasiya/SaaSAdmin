@@ -1,5 +1,11 @@
 {
- "actions": [],
+ "actions": [
+  {
+   "action": "setup_app.setup_app.doctype.saas_sites.saas_sites.setupSite",
+   "action_type": "Server Action",
+   "label": "Create site"
+  }
+ ],
  "allow_rename": 1,
  "creation": "2023-05-09 09:08:03.596019",
  "default_view": "List",
@@ -12,7 +18,8 @@
   "last_name",
   "company_name",
   "email",
-  "password"
+  "password",
+  "create_a_site"
  ],
  "fields": [
   {
@@ -50,14 +57,19 @@
   },
   {
    "fieldname": "password",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "label": "password",
    "reqd": 1
+  },
+  {
+   "fieldname": "create_a_site",
+   "fieldtype": "Button",
+   "label": "create a site"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-09 09:08:03.596019",
+ "modified": "2023-05-12 14:29:50.596636",
  "modified_by": "Administrator",
  "module": "Setup App",
  "name": "SaaS sites",

@@ -1,5 +1,11 @@
 {
- "actions": [],
+ "actions": [
+  {
+   "action": "setup_app.setup_app.doctype.saas_stock_sites.saas_stock_sites.refreshStockSites",
+   "action_type": "Server Action",
+   "label": "refresh sites"
+  }
+ ],
  "allow_rename": 1,
  "creation": "2023-05-09 15:53:14.275063",
  "default_view": "List",
@@ -8,7 +14,8 @@
  "engine": "InnoDB",
  "field_order": [
   "subdomain",
-  "isused"
+  "isused",
+  "admin_password"
  ],
  "fields": [
   {
@@ -23,11 +30,16 @@
    "fieldname": "isused",
    "fieldtype": "Data",
    "label": "isUsed"
+  },
+  {
+   "fieldname": "admin_password",
+   "fieldtype": "Data",
+   "label": "admin password"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-09 15:53:14.275063",
+ "modified": "2023-05-12 14:42:50.944040",
  "modified_by": "Administrator",
  "module": "Setup App",
  "name": "SaaS stock sites",

@@ -1,43 +1,38 @@
 # Copyright (c) 2023, OneHash and contributors
 # For license information, please see license.txt
 import sys
+import json
 sys.path.append('../saas_stock_sites')
 import frappe
 import os
 import subprocess as sp
 from time import sleep
 from frappe.model.document import Document
-domain = 'localhost'
+domain = frappe.get_doc('SaaS settings').domain
 def executeCommands(commands):
     command = " & ".join(commands)
     print("executing ",command)
     process = sp.Popen(command,shell=True,stdout=sp.PIPE)
-    print("waiting")
     process.wait()
-    print("waiting done")
     print(process.returncode)
-def checkifDone(site,time=0):
-    print(site)
-    if(time > 50):
-        exit(1)
-    status = sp.getoutput('echo $SITE_{}_STATUS'.format(site).replace('.','M'))
-    print(status)
-    print(sp.getoutput('echo $madarchod'))
-    if status == 'done':
-        return 1
-    else :
-        sleep(10)
-        checkifDone(site,time+10)
     
-    
-def setupSite(subdomain,admin_password,fname,lname,company_name,email):
+@frappe.whitelist()    
+def setupSite(*args, **kwargs):
+    print(kwargs)
+    doc = json.loads(kwargs["doc"])
+    print(doc)
+    company_name = doc["company_name"]
+    subdomain = doc["domain"]
+    admin_password = doc["password"]
+    fname = doc["first_name"]
+    lname = doc["last_name"]
+    email = doc['email']
+    print(company_name,subdomain,admin_password,fname,lname,email)
     config = frappe.get_doc("SaaS settings")
-    # find a stock site not used
     stock_sites = frappe.db.get_list("SaaS stock sites",filters={'isused':"no"})
     target_site = frappe.get_doc("SaaS stock sites",stock_sites[0]["name"])
-    print("using ",target_site.subdomain,"crating",subdomain)
+    print("using ",target_site.subdomain,"to create ",subdomain)
     commands = []
-  #  commands.append('mv sites/{} sites/{}'.format(target_site.subdomain + '.' + domain,subdomain + '.' + domain))
     current_site = subdomain + '.' + domain
     print(target_site.subdomain + '.' + domain )
     commands.append('export SITE_{}_STATUS=creating'.format(current_site).replace('.','M'))
@@ -46,12 +41,11 @@ def setupSite(subdomain,admin_password,fname,lname,company_name,email):
     target_site.isused = 'yes'
     print("s",target_site)
     target_site.save()
-   # commands.append('echo -y | -S bench setup nginx ')
-    #commands.append('echo 861756 | sudo -S service nginx reload')
+    commands.append('echo y | bench setup nginx ')
+    commands.append('echo {} | sudo -S service nginx reload'.format(config.root_password))
     commands.append('export SITE_{}_STATUS=done'.format(current_site).replace('.','M'))
     commands.append('export madarchod=1')
     executeCommands(commands)
-   # checkifDone(current_site)
     new_site = frappe.new_doc("SaaS sites")
     new_site.password = admin_password
     new_site.first_name = fname
