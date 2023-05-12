@@ -54,7 +54,7 @@ def setupSite(*args, **kwargs):
     new_site.email = email
     new_site.domain = current_site
     new_site.save()
-    print("created",current_site)
+    frappe.msgprint(msg='Site {} has been created'.format(current_site))
     return True
 
 class SaaSsites(Document):
