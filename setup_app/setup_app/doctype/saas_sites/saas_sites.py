@@ -42,7 +42,7 @@ def setupSite(*args, **kwargs):
     print("s",target_site)
     target_site.save()
     commands.append('echo y | bench setup nginx ')
-    commands.append('echo {} | sudo -S service nginx reload'.format(config.root_password))
+    commands.append('echo {} | sudo service nginx reload'.format(config.root_password))
     commands.append('export SITE_{}_STATUS=done'.format(current_site).replace('.','M'))
     commands.append('export madarchod=1')
     executeCommands(commands)
