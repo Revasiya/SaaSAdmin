@@ -11,6 +11,8 @@ from frappe.model.document import Document
 domain = frappe.get_doc('SaaS settings').domain
 log = open('log.txt','a')
 def executeCommands(commands):
+    commands.append("bench --version")
+
     command = " ; ".join(commands)
     print("executing ",command)
     process = sp.Popen(command,shell=True,stdout=log)
