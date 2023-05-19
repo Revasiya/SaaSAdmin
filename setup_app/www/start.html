@@ -1,157 +1,156 @@
-{% block style %}
+{% extends "templates/web.html" %} {% block style %}
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+  href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
 />
 <!-- no-header -->
+
 <style>
+  .navbar,
+  .web-footer {
+    display: none;
+  }
   :root {
     --primary: #2490ef;
   }
-  .navbar,
-  .web-footer {
-    display: none !important;
-  }
-  main {
+  .mains {
     display: flex;
-    height: 100vh;
-  }
-  body {
-    overflow: hidden;
-  }
-  .left,
-  .right {
     height: 100%;
   }
   .left {
-    width: 60vw;
+    width: 40%;
     padding: 40px;
+    background: #faf8f8;
+    height: 100%;
   }
   .right {
-    background: url("/assets/setup_app/hero.jpg");
-    background-position: center;
+    width: 60%;
+    background: url("/setup_app/assets/hero.jpg") no-repeat center center;
     background-size: cover;
-    width: 40vw;
+    padding: 40px;
+
+    justify-content: center;
+    align-items: center;
+    display: flex;
   }
-  .progressbar {
-    counter-reset: step;
+  .award_box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
-  .progressbar li {
-    list-style: none;
-    display: inline-block;
-    width: 30.33%;
-    position: relative;
-    text-align: center;
-    cursor: pointer;
+  .login_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
-  .progressbar li:before {
-    content: counter(step);
-    counter-increment: step;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    border: 1px solid #ddd;
-    border-radius: 100%;
-    display: block;
-    text-align: center;
-    margin: 0 auto 10px auto;
-    background-color: #fff;
+  .login_box_main {
+    flex-basis: 300px;
   }
-  .progressbar li:after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 1px;
-    background-color: #ddd;
-    top: 15px;
-    left: -50%;
-    z-index: -1;
-  }
-  .progressbar li:first-child:after {
-    content: none;
-  }
-  .progressbar li.active {
-    color: var(--primary);
-  }
-  .progressbar li.active:before {
-    border-color: var(--primary);
-    background-color: var(--primary);
-    color: white;
-  }
-  .progressbar li.active + li:after {
-    background-color: var(--primary);
+  .awards {
+    height: auto;
+    width: 509px;
   }
 </style>
 {% endblock %} {% block page_content %}
-<main id="app">
-  {{message}}
+<div id="apsp" class="mains">
   <div class="left">
-    <img
-      src="https://uploads-ssl.webflow.com/5e53d34464688e6f5960a338/610a36c2792530d601aaf35f_OneHash_Logo.svg"
-      width="150px;"
-      aria-hidden="true"
-    />
-    <h3 class="is-size-4 mb-3">Create an account</h3>
-    <form action="">
-      <div class="columns">
-        <div class="column">
-          <div class="control">
+    <div class="login_box">
+      <div>
+        <img
+          src="https://uploads-ssl.webflow.com/5e53d34464688e6f5960a338/610a36c2792530d601aaf35f_OneHash_Logo.svg"
+          width="110px;"
+          aria-hidden="true"
+        />
+
+        <div class="headings">
+          <h2>Free 14 day trial</h2>
+          <h3>No credit card required</h3>
+        </div>
+        <div class="login_box_main">
+          <div class="grid">
             <input
-              v-model="fname"
-              class="input"
               type="text"
-              placeholder="First Name"
+              id="firstname"
+              name="firstname"
+              placeholder="First name"
+              v-model="fname"
+              required
+            />
+
+            <input
+              type="text"
+              id="lastname"
+              name="lastname"
+              placeholder="Last name"
+              required
+              v-model="lname"
             />
           </div>
-        </div>
-        <div class="column">
-          <div class="control">
-            <input class="input" type="text" placeholder="Last Name" />
+          <input
+            type="text"
+            id="sitename"
+            name="sitename"
+            placeholder="sitename.onehash.store"
+            required
+            v-model="sitename"
+          />
+          <input
+            type="text"
+            id="companyname"
+            name="companyname"
+            placeholder="Company name"
+            required
+            v-model="comapany_name"
+          />
+          <div class="grid">
+            <input
+              type="text"
+              id="email"
+              name="email"
+              placeholder="Email"
+              required
+              v-model="email"
+            />
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Password"
+              required
+              v-model="password"
+            />
           </div>
+          <button type="submit" @click="createSite">Submit</button>
         </div>
       </div>
-      <div class="field has-addons">
-        <p class="control" style="width: 100%">
-          <input class="input" type="text" placeholder="Your sitename" />
-        </p>
-        <p class="control">
-          <a class="button is-static"> .onehash.ai </a>
-        </p>
-      </div>
-      <div class="field">
-        <p class="control" style="width: 100%">
-          <input class="input" type="text" placeholder="Company name" />
-        </p>
-      </div>
-      <div class="columns">
-        <div class="column">
-          <div class="control">
-            <input class="input" type="text" placeholder="Email" />
-          </div>
-        </div>
-        <div class="column">
-          <div class="control">
-            <input class="input" type="text" placeholder="Password" />
-          </div>
-        </div>
-      </div>
-      <button
-        class="button is-success"
-        style="background-color: var(--primary)"
-      >
-        Proceed
-      </button>
-    </form>
-    <div>
-      <ul class="progressbar">
-        <li class="active">Creating account</li>
-        <li class="active">Creating your site</li>
-        <li>Redirecting</li>
-      </ul>
     </div>
   </div>
-  <div class="right"></div>
-</main>
+  <div class="right">
+    <div class="award_box">
+      <img
+        class="awards"
+        style="width: 750px"
+        src="/assets/setup_app/rating.png"
+        alt=""
+      />
+      <img
+        class="awards"
+        style="margin-top: 40px"
+        src="/assets/setup_app/award1.png"
+        alt=""
+      />
+      <img class="awards" src="/assets/setup_app/award2.png" alt="" />
+      <img
+        class="awards"
+        style="width: 337px"
+        src="/assets/setup_app/award3.png"
+        alt=""
+      />
+    </div>
+  </div>
+</div>
 {% endblock %} {% block script %}
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="./start.js"></script>

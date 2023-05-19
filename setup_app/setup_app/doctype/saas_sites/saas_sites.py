@@ -9,12 +9,23 @@ import subprocess as sp
 from time import sleep
 from frappe.model.document import Document
 domain = frappe.get_doc('SaaS settings').domain
+log = open('log.txt','a')
 def executeCommands(commands):
-    command = " & ".join(commands)
+    command = " ; ".join(commands)
     print("executing ",command)
-    process = sp.Popen(command,shell=True,stdout=sp.PIPE)
+    process = sp.Popen(command,shell=True,stdout=log)
     process.wait()
+    if(domain != 'localhost'):
+        os.system('sudo service nginx reload')
     print(process.returncode)
+    
+@frappe.whitelist()   
+def test_site(*args, **kwargs):
+    print( "test site called")
+    print(frappe.publish_realtime("sex"))
+    frappe.publish_realtime('site_created',message={"site":"test"})
+    frappe.publish_progress(25, title='Some title', description='Some description')
+    return "done"
     
 @frappe.whitelist()    
 def setupSite(*args, **kwargs):
@@ -29,7 +40,9 @@ def setupSite(*args, **kwargs):
     email = doc['email']
     print(company_name,subdomain,admin_password,fname,lname,email)
     config = frappe.get_doc("SaaS settings")
+    print(config)
     stock_sites = frappe.db.get_list("SaaS stock sites",filters={'isused':"no"})
+    print(stock_sites)
     target_site = frappe.get_doc("SaaS stock sites",stock_sites[0]["name"])
     print("using ",target_site.subdomain,"to create ",subdomain)
     commands = []
@@ -41,10 +54,7 @@ def setupSite(*args, **kwargs):
     target_site.isused = 'yes'
     print("s",target_site)
     target_site.save()
-    commands.append('echo y | bench setup nginx ')
-    commands.append('echo {} | sudo service nginx reload'.format(config.root_password))
-    commands.append('export SITE_{}_STATUS=done'.format(current_site).replace('.','M'))
-    commands.append('export madarchod=1')
+    commands.append('bench setup nginx --yes')
     executeCommands(commands)
     new_site = frappe.new_doc("SaaS sites")
     new_site.password = admin_password
@@ -54,8 +64,7 @@ def setupSite(*args, **kwargs):
     new_site.email = email
     new_site.domain = current_site
     new_site.save()
-    frappe.msgprint(msg='Site {} has been created'.format(current_site))
-    return True
-
+    frappe.publish_realtime('site_created')
+    return "done"
 class SaaSsites(Document):
 	pass
