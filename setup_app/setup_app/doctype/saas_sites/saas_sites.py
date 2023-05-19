@@ -9,11 +9,15 @@ import subprocess as sp
 from time import sleep
 from frappe.model.document import Document
 domain = frappe.get_doc('SaaS settings').domain
+log = open('log.txt','a')
 def executeCommands(commands):
-    command = " & ".join(commands)
+    commands.append("bench --version")
+
+    command = " ; ".join(commands)
     print("executing ",command)
-    process = sp.Popen(command,shell=True,stdout=sp.PIPE)
+    process = sp.Popen(command,shell=True,stdout=log)
     process.wait()
+    os.system('sudo service nginx reload')
     print(process.returncode)
     
 @frappe.whitelist()    
@@ -41,7 +45,7 @@ def setupSite(*args, **kwargs):
     target_site.isused = 'yes'
     print("s",target_site)
     target_site.save()
-    commands.append('echo y | bench setup nginx ')
+    commands.append('bench setup nginx --yes')
     commands.append('echo {} | sudo service nginx reload'.format(config.root_password))
     commands.append('export SITE_{}_STATUS=done'.format(current_site).replace('.','M'))
     commands.append('export madarchod=1')
