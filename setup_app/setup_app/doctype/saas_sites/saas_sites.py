@@ -12,13 +12,13 @@ domain = frappe.get_doc('SaaS settings').domain
 log = open('log.txt','a')
 def executeCommands(commands):
     commands.append("bench --version")
-
+    config = frappe.get_doc("SaaS settings")
     command = " ; ".join(commands)
     print("executing ",command)
     process = sp.Popen(command,shell=True,stdout=log)
     process.wait()
     if(domain != 'localhost'):
-        os.system('sudo service nginx reload')
+        os.system('echo {} | sudo -S sudo service nginx reload'.format(config.root_password))
     print(process.returncode)
     
 @frappe.whitelist()   
@@ -65,7 +65,7 @@ def setupSite(*args, **kwargs):
     new_site.email = email
     new_site.domain = current_site
     new_site.save()
-    frappe.publish_realtime('site_created',message={"site":current_site})
+    frappe.publish_realtime('site_created',message={"site":subdomain})
     return "done"
 class SaaSsites(Document):
 	pass
