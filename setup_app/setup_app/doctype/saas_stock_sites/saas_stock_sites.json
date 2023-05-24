@@ -39,7 +39,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-12 14:42:50.944040",
+ "modified": "2023-05-24 15:18:11.678202",
  "modified_by": "Administrator",
  "module": "Setup App",
  "name": "SaaS stock sites",
@@ -54,6 +54,18 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Site_creator",
    "share": 1,
    "write": 1
   }

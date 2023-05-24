@@ -26,10 +26,9 @@ def test_site(*args, **kwargs):
     print( "test site called")
     print(frappe.publish_realtime("sex"))
     frappe.publish_realtime('site_created',message={"site":"test"})
-    frappe.publish_progress(25, title='Some title', description='Some description')
     return "done"
     
-@frappe.whitelist()    
+@frappe.whitelist(allow_guest=True)   
 def setupSite(*args, **kwargs):
     print(kwargs)
     doc = json.loads(kwargs["doc"])
@@ -66,7 +65,7 @@ def setupSite(*args, **kwargs):
     new_site.email = email
     new_site.domain = current_site
     new_site.save()
-    frappe.publish_realtime('site_created')
+    frappe.publish_realtime('site_created',message={"site":current_site})
     return "done"
 class SaaSsites(Document):
 	pass
