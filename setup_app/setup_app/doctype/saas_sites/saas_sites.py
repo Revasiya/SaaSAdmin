@@ -42,9 +42,9 @@ def setupSite(*args, **kwargs):
     print(company_name,subdomain,admin_password,fname,lname,email)
     config = frappe.get_doc("SaaS settings")
     print(config)
-    stock_sites = frappe.db.get_list("SaaS stock sites",filters={'isused':"no"})
+    stock_sites = frappe.db.get_list("SaaS stock sites",filters={'isused':"no"},ignore_permissions=True)
     print(stock_sites)
-    target_site = frappe.get_doc("SaaS stock sites",stock_sites[0]["name"])
+    target_site = frappe.get_doc("SaaS stock sites",stock_sites[0]["name"],ignore_permissions=True)
     print("using ",target_site.subdomain,"to create ",subdomain)
     commands = []
     current_site = subdomain + '.' + domain
@@ -54,7 +54,7 @@ def setupSite(*args, **kwargs):
     commands.append('bench setup add-domain {} --site {}'.format(current_site,target_site.subdomain + '.' + domain))
     target_site.isused = 'yes'
     print("s",target_site)
-    target_site.save()
+    target_site.save(ignore_permissions=True)
     commands.append('bench setup nginx --yes')
     executeCommands(commands)
     new_site = frappe.new_doc("SaaS sites")
@@ -64,8 +64,12 @@ def setupSite(*args, **kwargs):
     new_site.company_name = company_name
     new_site.email = email
     new_site.domain = current_site
-    new_site.save()
-    frappe.publish_realtime('site_created',message={"site":subdomain})
+    new_site.save(ignore_permissions=True)
+    if(domain == 'localhost'):
+        print("sending message",target_site.subdomain)
+        frappe.publish_realtime('site_created',message={"site":target_site.subdomain})
+    else :
+        frappe.publish_realtime('site_created',message={"site":subdomain})
     return "done"
 class SaaSsites(Document):
 	pass

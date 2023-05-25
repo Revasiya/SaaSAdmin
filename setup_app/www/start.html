@@ -1,6 +1,18 @@
 {% extends "templates/web.html" %} {% block style %}
 
 <!-- no-header -->
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css"
+/>
 
 <style>
   .navbar,
@@ -10,9 +22,20 @@
   :root {
     --primary: #2490ef;
   }
+  button[type="submit"] {
+    width: 100%;
+    margin-top: 20px;
+  }
   .mains {
     display: flex;
-    height: 100%;
+    height: 100vh;
+  }
+  .row {
+    margin: 0;
+    width: 100%;
+  }
+  input.error {
+    border: 1px solid red;
   }
   .left {
     width: 40%;
@@ -49,7 +72,25 @@
     height: auto;
     width: 509px;
   }
+  .input-reset {
+    padding: 2px;
+  }
+  .margin-0 {
+    margin: 0;
+  }
+  ul,
+  li {
+    margin: 0;
+    font-size: 10px;
+  }
+  .errors {
+    color: red;
+  }
+  .logo {
+    width: 126px;
+  }
 </style>
+
 {% endblock %} {% block page_content %}
 <div id="apsp" class="mains">
   <div class="left">
@@ -57,69 +98,90 @@
       <div>
         <img
           src="https://uploads-ssl.webflow.com/5e53d34464688e6f5960a338/610a36c2792530d601aaf35f_OneHash_Logo.svg"
-          width="110px;"
+          class="logo"
           aria-hidden="true"
         />
 
         <div class="headings">
-          <h2>Free 14 day trial</h2>
-          <h3>No credit card required</h3>
+          <h2 class="margin-0">Free 14 day trial</h2>
+          <h5>No credit card required</h5>
         </div>
         <div class="login_box_main">
-          <div class="grid">
-            <input
-              type="text"
-              id="firstname"
-              name="firstname"
-              placeholder="First name"
-              v-model="fname"
-              required
-            />
-
-            <input
-              type="text"
-              id="lastname"
-              name="lastname"
-              placeholder="Last name"
-              required
-              v-model="lname"
-            />
+          <div class="row">
+            <div class="col-6 input-reset">
+              <input
+                type="text"
+                id="firstname"
+                name="firstname"
+                class="input"
+                placeholder="First name"
+                v-model="fname"
+                required
+              />
+            </div>
+            <div class="col-6 input-reset">
+              <input
+                type="text"
+                id="lastname"
+                class="input"
+                name="lastname"
+                placeholder="Last name"
+                required
+                v-model="lname"
+              />
+            </div>
           </div>
           <input
             type="text"
             id="sitename"
+            class="input"
             name="sitename"
-            placeholder="sitename.onehash.store"
+            placeholder="sitename "
             required
             v-model="sitename"
           />
           <input
             type="text"
+            class="input"
             id="companyname"
             name="companyname"
             placeholder="Company name"
             required
             v-model="comapany_name"
           />
-          <div class="grid">
-            <input
-              type="text"
-              id="email"
-              name="email"
-              placeholder="Email"
-              required
-              v-model="email"
-            />
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              required
-              v-model="password"
-            />
+          <div class="row">
+            <div class="col-6 input-reset">
+              <input
+                type="text"
+                id="email"
+                name="email"
+                placeholder="Email"
+                class="input"
+                required
+                v-model="email"
+              />
+            </div>
+            <div class="col-6 input-reset">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="input"
+                placeholder="Password"
+                required
+                v-model="password"
+              />
+            </div>
           </div>
-          <button type="submit" @click="createSite">Submit</button>
+          <div class="errors" v-if="inputErrors.length > 0 ">
+            <small>Please fix these issues</small>
+            <ul v-for="error in inputErrors">
+              <li>{{error}}</li>
+            </ul>
+          </div>
+          <button type="submit" @click="createSite" class="loading">
+            Submit
+          </button>
         </div>
       </div>
     </div>
