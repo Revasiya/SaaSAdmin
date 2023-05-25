@@ -25,10 +25,11 @@ jobs:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/github-actions-key.pem
-          chmod 600 ~/.ssh/github-actions-key.pem
+          echo "$SSH_KEY" > ~/.ssh/login.pem
+          chmod 600 ~/.ssh/login.pem
           cd ~/.ssh/
-          ssh -tt -i "github-actions-key.pem" -o UserKnownHostsFile=~/.ssh/known_hosts ubuntu@ec2-44-204-193-68.compute-1.amazonaws.com
+          cat login.pem
+          ssh -tt -i "login.pem" -o UserKnownHostsFile=~/.ssh/known_hosts ubuntu@ec2-44-204-193-68.compute-1.amazonaws.com
           ls
         env:
           SSH_HOST: ${{ env.REMOTE_HOST }}
