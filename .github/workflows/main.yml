@@ -27,6 +27,7 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/github-actions-key.pem
           chmod 600 ~/.ssh/github-actions-key.pem
+          cd ~/.ssh/
           ls
         env:
           SSH_HOST: ${{ env.REMOTE_HOST }}
