@@ -8,8 +8,8 @@ on:
 
 env:
   AWS_REGION: "us-east-1"
-  REMOTE_HOST: "44.204.193.68"
-  REMOTE_USER: "root"
+  REMOTE_HOST: "ec2-44-204-193-68.compute-1.amazonaws.com"
+  REMOTE_USER: "ubuntu"
 
 permissions:
   contents: read
