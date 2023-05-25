@@ -44,9 +44,19 @@ def setupSite(*args, **kwargs):
     print(config)
     stock_sites = frappe.db.get_list("SaaS stock sites",filters={'isused':"no"},ignore_permissions=True)
     print(stock_sites)
-    target_site = frappe.get_doc("SaaS stock sites",stock_sites[0]["name"],ignore_permissions=True)
-    print("using ",target_site.subdomain,"to create ",subdomain)
+    target_site = None
     commands = []
+    if(len(stock_sites) == 0):  
+        commands.append("bench new-site {} --install-app erpnext --admin-password {} --db-root-password {}".format(subdomain + '.'+domain,admin_password,config.db_password))
+        site = frappe.new_doc("SaaS stock sites")
+        site.subdomain = subdomain
+        site.admin_password = admin_password
+        site.insert(ignore_permissions=True)
+        target_site = site
+    else:
+        target_site = frappe.get_doc("SaaS stock sites",stock_sites[0]["name"],ignore_permissions=True)
+    print("using ",target_site.subdomain,"to create ",subdomain)
+    
     current_site = subdomain + '.' + domain
     print(target_site.subdomain + '.' + domain )
     commands.append('export SITE_{}_STATUS=creating'.format(current_site).replace('.','M'))
@@ -67,7 +77,7 @@ def setupSite(*args, **kwargs):
     new_site.save(ignore_permissions=True)
     if(domain == 'localhost'):
         print("sending message",target_site.subdomain)
-        frappe.publish_realtime('site_created',message={"site":target_site.subdomain})
+        frappe.publish_realtime('site_created',message={"site":target_site.subdomain},user=frappe.session.user)
     else :
         frappe.publish_realtime('site_created',message={"site":subdomain})
     return "done"

@@ -45,6 +45,7 @@ createApp({
     frappe.socketio.init();
 
     frappe.socketio.socket.on("site_created", (data) => {
+      console.log("site created");
       this.status.step3 = "completed";
       if (window.dev_server) {
         window.location.href = `http://${data.site}.${domain}:8000`;
@@ -132,6 +133,7 @@ createApp({
           },
         },
         callback: (r) => {
+          console.log("functon called", r);
           this.status.step1 = "completed";
           this.status.step2 = "completed";
           if (r.message) {
