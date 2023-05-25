@@ -1,19 +1,12 @@
 {% extends "templates/web.html" %} {% block style %}
 
 <!-- no-header -->
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"
-/>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css"
-/>
 
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/css/uikit.min.css"
+/>
+<link rel="stylesheet" href="./step.css" />
 <style>
   .navbar,
   .web-footer {
@@ -103,27 +96,31 @@
         />
 
         <div class="headings">
-          <h2 class="margin-0">Free 14 day trial</h2>
-          <h5>No credit card required</h5>
+          <h2 class="uk-margin-remove uk-text-lead uk-text-large uk-text-bold">
+            Free 14 day trial
+          </h2>
+          <h5 class="margin-0 uk-margin-bottom uk-text-light">
+            No credit card required
+          </h5>
         </div>
         <div class="login_box_main">
-          <div class="row">
-            <div class="col-6 input-reset">
+          <div uk-grid>
+            <div class="uk-width-1-2">
               <input
                 type="text"
                 id="firstname"
                 name="firstname"
-                class="input"
+                class="input uk-input"
                 placeholder="First name"
                 v-model="fname"
                 required
               />
             </div>
-            <div class="col-6 input-reset">
+            <div class="uk-width-1-2">
               <input
                 type="text"
                 id="lastname"
-                class="input"
+                class="input uk-input"
                 name="lastname"
                 placeholder="Last name"
                 required
@@ -134,54 +131,84 @@
           <input
             type="text"
             id="sitename"
-            class="input"
+            class="input uk-input uk-margin"
             name="sitename"
-            placeholder="sitename "
+            placeholder="Site name "
             required
             v-model="sitename"
           />
           <input
             type="text"
-            class="input"
+            class="input uk-input uk-margin-bottom"
             id="companyname"
             name="companyname"
             placeholder="Company name"
             required
             v-model="comapany_name"
           />
-          <div class="row">
-            <div class="col-6 input-reset">
+          <div uk-grid>
+            <div class="uk-width-1-2 uk-margin">
               <input
                 type="text"
                 id="email"
                 name="email"
                 placeholder="Email"
-                class="input"
+                class="input uk-input"
                 required
                 v-model="email"
               />
             </div>
-            <div class="col-6 input-reset">
+            <div class="uk-width-1-2">
               <input
                 type="password"
                 id="password"
                 name="password"
-                class="input"
+                class="input uk-input"
                 placeholder="Password"
                 required
                 v-model="password"
               />
             </div>
           </div>
-          <div class="errors" v-if="inputErrors.length > 0 ">
-            <small>Please fix these issues</small>
-            <ul v-for="error in inputErrors">
-              <li>{{error}}</li>
-            </ul>
-          </div>
-          <button type="submit" @click="createSite" class="loading">
-            Submit
+
+          <button
+            type="submit"
+            @click="createSite"
+            class="uk-button uk-button-primary"
+          >
+            <div
+              uk-spinner="ratio: 1"
+              class="uk-margin-right"
+              v-if="loading"
+            ></div>
+            <span v-if="loading == false">SUBMIT</span>
           </button>
+          <ol class="steps">
+            <li
+              class="step"
+              data-step="1"
+              id="step1"
+              :class="{'is-complete':status.step1 == 'completed','is-active':status.step1 == 'active'}"
+            >
+              Creating site
+            </li>
+            <li
+              class="step"
+              data-step="2"
+              id="step2"
+              :class="{'is-complete':status.step2 == 'completed','is-active':status.step2 == 'active'}"
+            >
+              Creating user
+            </li>
+            <li
+              class="step"
+              data-step="3"
+              id="step3"
+              :class="{'is-complete':status.step3 == 'completed','is-active':status.step3 == 'active'}"
+            >
+              Redirecting
+            </li>
+          </ol>
         </div>
       </div>
     </div>
@@ -211,6 +238,9 @@
   </div>
 </div>
 {% endblock %} {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.16.19/dist/js/uikit-icons.min.js"></script>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
 <script src="./start.js"></script>
 {% endblock %}
