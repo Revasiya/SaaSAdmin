@@ -137,7 +137,7 @@ createApp({
           this.status.step1 = "completed";
           this.status.step2 = "completed";
           if (r.message) {
-            console.log(r.message);
+            console.log("message", r.message);
           }
         },
       });

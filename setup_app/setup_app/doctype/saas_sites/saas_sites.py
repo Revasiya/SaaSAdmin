@@ -77,7 +77,7 @@ def setupSite(*args, **kwargs):
     new_site.save(ignore_permissions=True)
     if(domain == 'localhost'):
         print("sending message",target_site.subdomain)
-        frappe.publish_realtime('site_created',message={"site":target_site.subdomain},user=frappe.session.user)
+        frappe.publish_realtime('site_created',message={"site":target_site.subdomain})
     else :
         frappe.publish_realtime('site_created',message={"site":subdomain})
     return "done"
