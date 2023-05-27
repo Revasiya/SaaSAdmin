@@ -75,11 +75,20 @@ def setupSite(*args, **kwargs):
     new_site.email = email
     new_site.domain = current_site
     new_site.save(ignore_permissions=True)
-    if(domain == 'localhost'):
-        print("sending message",target_site.subdomain)
-        frappe.publish_realtime('site_created',message={"site":target_site.subdomain})
-    else :
-        frappe.publish_realtime('site_created',message={"site":subdomain})
     return "done"
+@frappe.whitelist(allow_guest=True)  
+def checkSiteCreated(*args, **kwargs):
+    doc = json.loads(kwargs["doc"])
+    sitename = doc["domain"]
+    print(sitename + domain)
+    site = frappe.db.get_list("SaaS sites",filters={'domain':sitename + "."+domain},ignore_permissions=True)
+    print(site)
+    if(len(site) > 0):
+        return "yes"
+    else:
+        return "no"
+    
+    
+    
 class SaaSsites(Document):
 	pass

@@ -17,6 +17,7 @@ createApp({
       lname: "",
       email: "",
       password: "",
+      siteCreated: false,
       loading: false,
       sitename: "",
       comapany_name: "",
@@ -94,6 +95,46 @@ createApp({
       }
       return isOk;
     },
+    checkSiteCreated() {
+      console.log("checking site created");
+      let response;
+      frappe.call({
+        method:
+          "setup_app.setup_app.doctype.saas_sites.saas_sites.checkSiteCreated",
+        args: {
+          doc: {
+            domain: this.sitename,
+          },
+        },
+        async: false,
+        callback: (r) => {
+          console.log("output", r.message);
+          if (r.message == "yes") {
+            this.siteCreated = true;
+          }
+          response = r.message;
+        },
+      });
+      return response;
+    },
+    checkSiteCreatedPoll() {
+      console.log("polling site creation");
+      this.checkSiteCreated();
+      if (this.siteCreated) {
+        this.status.step3 = "completed";
+        setTimeout(() => {
+          if (window.dev_server) {
+            window.location.href = `http://${this.sitename}.${domain}:8000`;
+          } else {
+            window.location.href = `https://${this.sitename}.${domain}`;
+          }
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          this.checkSiteCreatedPoll();
+        }, 3000);
+      }
+    },
     createSite() {
       this.loading = true;
       console.log(
@@ -138,6 +179,7 @@ createApp({
           this.status.step2 = "completed";
           if (r.message) {
             console.log("message", r.message);
+            this.checkSiteCreatedPoll();
           }
         },
       });
