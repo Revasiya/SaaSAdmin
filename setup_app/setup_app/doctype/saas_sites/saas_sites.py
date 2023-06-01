@@ -5,7 +5,6 @@ import json
 sys.path.append('../saas_stock_sites')
 import frappe
 import os
-from frappeclient import FrappeClient
 import time
 import subprocess as sp
 from time import sleep
@@ -100,7 +99,7 @@ def create_first_user_on_site(email,password,subdomain,firstname,lastname):
         url = "http://"+subdomain+"."+domain+":8000"
     else :
         url = "https://"+subdomain+"."+domain
-    from better_saas.better_saas.doctype.saas_user.frappeclient import FrappeClient
+    from setup_app.setup_app.doctype.saas_sites.frappeclient import FrappeClient
     print(url)
     while(conn==""):
         try:
