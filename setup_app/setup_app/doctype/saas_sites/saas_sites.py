@@ -5,6 +5,8 @@ import json
 sys.path.append('../saas_stock_sites')
 import frappe
 import os
+from frappeclient import FrappeClient
+import time
 import subprocess as sp
 from time import sleep
 from frappe.model.document import Document
@@ -47,7 +49,8 @@ def setupSite(*args, **kwargs):
     target_site = None
     commands = []
     if(len(stock_sites) == 0):  
-        commands.append("bench new-site {} --install-app erpnext --admin-password {} --db-root-password {}".format(subdomain + '.'+domain,admin_password,config.db_password))
+        commands.append("bench new-site {} --install-app erpnext  --admin-password {} --db-root-password {}".format(subdomain + '.'+domain,admin_password,config.db_password))
+        commands.append("bench --site {} install-app clientside".format(subdomain + '.'+domain))
         site = frappe.new_doc("SaaS stock sites")
         site.subdomain = subdomain
         site.admin_password = admin_password
@@ -75,7 +78,73 @@ def setupSite(*args, **kwargs):
     new_site.email = email
     new_site.domain = current_site
     new_site.save(ignore_permissions=True)
-    return "done"
+    print("creating the first user")
+    sub = subdomain 
+    if domain == 'localhost':
+        sub = target_site.subdomain
+    print(sub)
+    resp = create_first_user_on_site(email,admin_password,sub,fname,lname)
+    if resp :
+        print("first user created")
+    else:
+        print("first user not created")
+        
+    return target_site.subdomain
+@frappe.whitelist(allow_guest=True)  
+def create_first_user_on_site(email,password,subdomain,firstname,lastname):
+    retry_count = 1
+    conn=""
+    user=None
+    url = ""
+    if domain == 'localhost':
+        url = "http://"+subdomain+"."+domain+":8000"
+    else :
+        url = "https://"+subdomain+"."+domain
+    from better_saas.better_saas.doctype.saas_user.frappeclient import FrappeClient
+    print(url)
+    while(conn==""):
+        try:
+            conn = FrappeClient(url)
+            conn.login("Administrator",password)
+            
+        except Exception as e:
+            print("Exception in connection to site:")
+            print(e)
+            print("Connection Object")
+            print(conn)
+            print(str(retry_count)+" Retry to Connect:")
+            retry_count = retry_count+1
+            time.sleep(2)
+        if(retry_count>3):
+            break			
+    
+    if(retry_count>3):
+        return False
+    try:
+        user = conn.get_list("User",filters={"email":email})
+        if(len(user)==0):
+            user = False
+    except Exception as e:
+        print(e)	
+        pass
+    if(not user):
+            conn.insert({
+        "doctype": "User",
+        "first_name": firstname,
+        "last_name":lastname,
+        "email": email,
+        "send_welcome_email":0,	
+        "new_password":password,
+        "enabled":1
+        })
+    user = conn.get_doc("User",email)
+    role_list = conn.get_list("Role",['name'],limit_page_length=1000,filters = [['Role','name','not in',["Administrator", "Guest", "All", "Customer", "Supplier", "Partner", "Employee"]]])
+    for role in role_list:
+        user['roles'].append({"role":role['name']})
+    conn.update(user)
+    return user
+    
+    
 @frappe.whitelist(allow_guest=True)  
 def checkSiteCreated(*args, **kwargs):
     doc = json.loads(kwargs["doc"])
@@ -88,7 +157,14 @@ def checkSiteCreated(*args, **kwargs):
     else:
         return "no"
     
-    
+@frappe.whitelist(allow_guest=True)
+def checkConnection():
+    #q4frq3
+    from better_saas.better_saas.doctype.saas_user.frappeclient import FrappeClient
+    url = "http://q4frq3.localhost:8000"
+    conn = FrappeClient(url)
+    conn.login("Administrator","12345678")
+    print(conn)
     
 class SaaSsites(Document):
-	pass
+    pass

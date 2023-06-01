@@ -9,3 +9,4 @@ class TestSaaSsites(unittest.TestCase):
 	def test_creating_new_site(self):
 		setupSite(random_string(4),'admin','Test fname',"test lname","test compay name",'test@email.com')
 		return 1
+	

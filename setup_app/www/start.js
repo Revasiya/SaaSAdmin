@@ -22,6 +22,7 @@ createApp({
       sitename: "",
       comapany_name: "",
       inputErrors: [],
+      targetSubdomain: "",
       status: {
         step1: "neutral",
         step2: "neutral",
@@ -59,6 +60,40 @@ createApp({
     }, 5000);
   },
   methods: {
+    loginIn() {
+      this.targetSubdomain = "samsunng";
+      this.email = "mailrohitkr6@gmail.com";
+      this.password = "Rohit123##";
+      let url =
+        "http://" +
+        this.targetSubdomain +
+        "." +
+        domain +
+        ":8000" +
+        "/api/method/login";
+      if (!window.dev_server) {
+        url = "https://" + this.sitename + "." + domain + "/api/method/login";
+      }
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `usr=${this.email}&pwd=${this.password}`,
+        credentials: "include",
+        cache: "no-cache",
+        referrerPolicy: "no-referrer",
+      }).then((data) => {
+        console.log("data", data);
+      });
+
+      // .then((data) => {
+      //   console.log("data", data);
+      //   if (data.message == "Logged In") {
+      //     console.log("logged in");
+      //   }
+      // });
+    },
     validateInput(fname, lname, email, password, sitename, comapany_name) {
       this.inputErrors = [];
       const errorClass = "uk-form-danger";
@@ -122,11 +157,15 @@ createApp({
       this.checkSiteCreated();
       if (this.siteCreated) {
         this.status.step3 = "completed";
+        const pass = this.password.replaceAll(/#/g, "%23");
+        const query = `?domain=${this.sitename}&email=${this.email}&password=${pass}&firstname=${this.fname}&lastname=${this.lname}&companyname=${this.comapany_name}`;
         setTimeout(() => {
           if (window.dev_server) {
-            window.location.href = `http://${this.sitename}.${domain}:8000`;
+            window.location.href =
+              `http://${this.targetSubdomain}.${domain}:8000/redirect` + query;
           } else {
-            window.location.href = `https://${this.sitename}.${domain}`;
+            window.location.href =
+              `https://${this.sitename}.${domain}/redirect` + query;
           }
         }, 2000);
       } else {
@@ -137,6 +176,7 @@ createApp({
     },
     createSite() {
       this.loading = true;
+      this.status.step1 = "active";
       console.log(
         "crete site",
         this.fname,
@@ -178,6 +218,7 @@ createApp({
           this.status.step1 = "completed";
           this.status.step2 = "completed";
           if (r.message) {
+            this.targetSubdomain = r.message;
             console.log("message", r.message);
             this.checkSiteCreatedPoll();
           }

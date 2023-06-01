@@ -23,8 +23,8 @@ def refreshStockSites(*args, **kwargs):
         for _ in range(number_of_sites_to_stock):
             subdomain = random_string(10)
             adminPassword = random_string(5)
-            commands.append("bench new-site {} --install-app erpnext --admin-password {} --db-root-password {}".format(subdomain + '.'+domain,adminPassword,config.db_password))
-            print(commands)
+            commands.append("bench new-site {} --install-app erpnext  --admin-password {} --db-root-password {}".format(subdomain + '.'+domain,adminPassword,config.db_password))
+            commands.append("bench --site {} install-app clientside".format(subdomain + '.'+domain))
             site = frappe.new_doc("SaaS stock sites")
             site.subdomain = subdomain
             site.admin_password = adminPassword
