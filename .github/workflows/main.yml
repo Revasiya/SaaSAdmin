@@ -1,16 +1,28 @@
-name: remote ssh command
-on: [push]
+name: CI
+on: [push, pull_request]
 jobs:
-
-  build:
-    name: Build
+  # test:
+  #   ...
+  deploy:
+    name: "Deploy to production"
     runs-on: ubuntu-latest
     steps:
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: "ec2-44-204-193-68.compute-1.amazonaws.com"
-        username: "ubuntu"
-        key: ${{ secrets.EC2_KEY }}
-        port: 22
-        script: whoami
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host staging
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.EC2_USER }}
+          SSH_KEY: ${{ secrets.EC2_KEY }}
+          SSH_HOST: ${{ secrets.EC2_HOST }}
+
+      - name: list volumes
+        run: ssh staging 'df -h'
