@@ -1,14 +1,13 @@
 const { createApp } = Vue;
-let domain = "onehash.store";
 if (window.dev_server) {
-  frappe.boot.socketio_port = "9001"; //use socketio port shown when bench starts
-  domain = "localhost";
+  domain = ".localhost:8000";
+} else {
+  domain = ".onehash.store";
 }
 frappe.ready(() => {
   console.log("ready");
   frappe.socketio.init();
 });
-console.log(frappe.socketio);
 
 createApp({
   data() {
@@ -45,55 +44,8 @@ createApp({
   },
   created() {
     frappe.socketio.init();
-
-    frappe.socketio.socket.on("site_created", (data) => {
-      console.log("site created");
-      this.status.step3 = "completed";
-      if (window.dev_server) {
-        window.location.href = `http://${data.site}.${domain}:8000`;
-      } else {
-        window.location.href = `https://${data.site}.${domain}`;
-      }
-    });
-    setTimeout(() => {
-      console.log(frappe.socketio.socket);
-    }, 5000);
   },
   methods: {
-    loginIn() {
-      this.targetSubdomain = "samsunng";
-      this.email = "mailrohitkr6@gmail.com";
-      this.password = "Rohit123##";
-      let url =
-        "http://" +
-        this.targetSubdomain +
-        "." +
-        domain +
-        ":8000" +
-        "/api/method/login";
-      if (!window.dev_server) {
-        url = "https://" + this.sitename + "." + domain + "/api/method/login";
-      }
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: `usr=${this.email}&pwd=${this.password}`,
-        credentials: "include",
-        cache: "no-cache",
-        referrerPolicy: "no-referrer",
-      }).then((data) => {
-        console.log("data", data);
-      });
-
-      // .then((data) => {
-      //   console.log("data", data);
-      //   if (data.message == "Logged In") {
-      //     console.log("logged in");
-      //   }
-      // });
-    },
     validateInput(fname, lname, email, password, sitename, comapany_name) {
       this.inputErrors = [];
       const errorClass = "uk-form-danger";
@@ -160,13 +112,14 @@ createApp({
         const pass = this.password.replaceAll(/#/g, "%23");
         const query = `?domain=${this.sitename}&email=${this.email}&password=${pass}&firstname=${this.fname}&lastname=${this.lname}&companyname=${this.comapany_name}`;
         setTimeout(() => {
+          let domainToRedirect = "";
           if (window.dev_server) {
-            window.location.href =
-              `http://${this.targetSubdomain}.${domain}:8000/redirect` + query;
+            domainToRedirect = this.targetSubdomain;
           } else {
-            window.location.href =
-              `https://${this.sitename}.${domain}/redirect` + query;
+            domainToRedirect = this.sitename;
           }
+          window.location.href =
+            `http://${domainToRedirect}${domain}/redirect` + query;
         }, 2000);
       } else {
         setTimeout(() => {
