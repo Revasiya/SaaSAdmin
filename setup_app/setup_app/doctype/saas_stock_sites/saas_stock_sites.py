@@ -8,12 +8,11 @@ from frappe.utils import random_string
 def getSiteConfig():
     siteConfig = frappe.get_doc("SaaS settings")
     return siteConfig
-def executeCommands(commands):
-    command = " & ".join(commands)
-    os.system(command)
+from setup_app.setup_app.doctype.saas_sites.saas_sites import executeCommands
 @frappe.whitelist()    
 def refreshStockSites(*args, **kwargs):
     # this function runs every day and maintains the stock site
+    print("refreshing stock sites")
     config = getSiteConfig()
     commands = []
     currentStock = frappe.db.get_list("SaaS stock sites",filters={"isUsed":"no"})
