@@ -116,7 +116,7 @@ app_license = "MIT"
 scheduler_events = {
 	
 	"hourly": [
-		"setup_app.setup_app.docktype.saas_stock_sites.saas_stock_sites.refreshStockSites"
+		"setup_app.setup_app.doctype.saas_stock_sites.saas_stock_sites.refreshStockSites"
     ]
 }
 
