@@ -11,5 +11,5 @@ jobs:
       with:
         host: "ec2-44-204-193-68.compute-1.amazonaws.com"
         username: "ubuntu"
-        password: ${{ secrets.EC2_KEY }}
+        key: ${{ secrets.EC2_KEY }}
         script: whoami
