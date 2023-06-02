@@ -11,6 +11,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh/
           echo $SSH_KEY > ~/.ssh/staging.key
+          cat ~/.ssh/staging.key
           chmod 600 ~/.ssh/staging.key
           cat >>~/.ssh/config <<END
           Host staging
