@@ -4,16 +4,21 @@ import frappe
 domain = frappe.get_doc('SaaS settings').domain
 from frappe.model.document import Document
 import os
+log = open('some file.txt', 'a')
 from frappe.utils import random_string
 def getSiteConfig():
     siteConfig = frappe.get_doc("SaaS settings")
     return siteConfig
-def create_multiple_sites_in_parallel(commands):
+def create_multiple_sites_in_parallel(commands,db_values):
+    print("creating multiple sites in parallel")
     from subprocess import Popen
-    processes = [Popen(cmd, shell=True) for cmd in commands]
-    for p in processes: 
-        p.wait()
-    
+    processes = [Popen(cmd, shell=True,stdout=log,stderr=log) for cmd in commands]
+    print("continue saving to DB")
+    for values in db_values:
+        site = frappe.new_doc("SaaS stock sites")
+        site.subdomain = values[0]
+        site.admin_password = values[1]
+        site.insert()
     
 @frappe.whitelist()    
 def refreshStockSites(*args, **kwargs):
@@ -33,15 +38,12 @@ def refreshStockSites(*args, **kwargs):
             this_command.append("bench new-site {} --install-app erpnext  --admin-password {} --db-root-password {}".format(subdomain + '.'+domain,adminPassword,config.db_password))
             this_command.append("bench --site {} install-app clientside".format(subdomain + '.'+domain))
             command = " ; ".join(this_command)
+            print("ADDED COMMAND",command)
             commands.append(command)
             db_values.append([subdomain,adminPassword])
-    
-    create_multiple_sites_in_parallel(commands)
-    for values in db_values:
-        site = frappe.new_doc("SaaS stock sites")
-        site.subdomain = values[0]
-        site.admin_password = values[1]
-        site.insert()
+    #frappe.enqueue(create_multiple_sites_in_parallel,commands=commands,db_values=db_values,is_async=True,job_name="create_multiple_sites_in_parallel",at_front=True)
+    create_multiple_sites_in_parallel(commands,db_values)
+    return "Database will be updated soon with stock sites "
 class SaaSstocksites(Document):
 	pass
         

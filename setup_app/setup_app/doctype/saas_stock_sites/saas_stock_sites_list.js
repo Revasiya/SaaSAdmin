@@ -4,7 +4,7 @@ function refresh() {
       "setup_app.setup_app.doctype.saas_stock_sites.saas_stock_sites.refreshStockSites"
     )
     .then((r) => {
-      frappe.msgprint(__("Sites refreshed"));
+      frappe.msgprint(r.message);
     });
 }
 
